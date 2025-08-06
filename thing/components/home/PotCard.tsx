@@ -8,8 +8,19 @@ import { shortenPk } from "@/app/utils/helper";
 // Temp imports
 import { PublicKey } from '@solana/web3.js';
 import { useState } from "react"
+import { useAppContext } from "@/context/context";
 
 const PotCard = () => {
+
+  const { 
+    connected, 
+    isMasterInitialized, 
+    initMaster
+  } = useAppContext(); 
+  console.log(connected, "connection status")
+
+
+
   // Static Data
   const lotteryId = 3
   const lotteryPot = 1000
@@ -21,27 +32,15 @@ const PotCard = () => {
   // Static States:
 
   // Is Wallet connected?
-  const [connected, setConnected] = useState(false)
+  // const [connected, setConnected] = useState(true)
   // Did the connected wallet create the lottery?
   const isLotteryAuthority = true
   // Is the master created for smart contract?
-  const [isMasterInitialized, setIsMasterInitialized] = useState(false)
   // Is there already a winner for the lottery?
   const [isFinished, setIsFinished] = useState(false)
   // If there is a winner can that winner claim the prize?
   const [canClaim, setCanClaim] = useState(false)
 
-  // Static Functions 
-
-  const connectWallet = () => {
-    setConnected(true)
-    console.log("Connecting static wallet")
-  }
-
-  const initMaster = () => {
-    setIsMasterInitialized(true)
-    console.log("Initialized Master")
-  }
 
   const createLottery = () => {
     // updates the lottery id
@@ -71,12 +70,11 @@ const PotCard = () => {
         </div>
         {connected ? (
           <>
-            <div  onClick={initMaster}>
+            <button className=" btn btn-primary" onClick={initMaster}>
               Initialize master
-            </div>
+            </button>
           </>
         ) : (
-          // Wallet multibutton goes here
           <WalletMultiButton />
         )}
       </div>
@@ -98,29 +96,29 @@ const PotCard = () => {
       {connected ? (
         <>
           {!isFinished && (
-            <div  onClick={buyTicket}>
+            <button className="btn btn-primary m-2" onClick={buyTicket}>
               Enter
-            </div>
+            </button>
           )}
 
           {isLotteryAuthority && !isFinished && (
-            <div  onClick={pickWinner}>
+            <button className="btn btn-primary m-2" onClick={pickWinner}>
               Pick Winner
-            </div>
+            </button>
           )}
 
           {canClaim && (
-            <div  onClick={claimPrize}>
+            <button className="btn btn-primary m-2" onClick={claimPrize}>
               Claim prize
-            </div>
+            </button>
           )}
 
-          <div  onClick={createLottery}>
+          <button className="btn btn-primary m-2" onClick={createLottery}>
             Create lottery
-          </div>
+          </button>
         </>
       ) : (
-        <button onClick={() => connectWallet()}>Connect Wallet</button>
+        <WalletMultiButton />
       )}
     </div>
   );
