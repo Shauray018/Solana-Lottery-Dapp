@@ -1,21 +1,22 @@
 "use client"
 
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui"
-
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react"
 
 
 export default function Header() {
+    const [mounted, setMounted] = useState(false);
 
-    const router = useRouter(); 
-    
+    useEffect(()=> { 
+        setMounted(true); 
+    },[])
 
     return ( 
-        <div className="flex items-center justify-between flex-row px-4 py-4 border-b shadow">
+        <div className="flex items-center justify-between flex-row px-4 py-4 bg-base-300 shadow">
             <div className="text-2xl font-bold"> 
                 Lottery app
             </div>
-            <WalletMultiButton />
+            { mounted && <WalletMultiButton /> } 
         </div>
     )
 }

@@ -1,13 +1,14 @@
 import Header from "@/components/common/Header";
-import Image from "next/image";
 import PotCard from "@/components/home/PotCard";
+import HistoryTable from "@/components/home/HistoryTable";
 
 export default function Home() {
   return (
     <div>
       <Header />
-      <div className="w-full flex justify-center items-center">
+      <div className="w-full flex flex-col justify-center items-center">
         <PotCard />
+        <HistoryTable />
       </div>
     </div>
   );

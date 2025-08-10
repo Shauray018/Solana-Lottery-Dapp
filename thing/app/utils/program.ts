@@ -56,13 +56,34 @@ export const getTicketAddress = async (
   return pda;
 };
 
+export const getTicketAddressDebug = async (
+  lotteryPk: PublicKey,
+  id: number
+): Promise<{ address: PublicKey, seeds: Buffer[] }> => {
+  const seeds = [
+    Buffer.from("ticket"),
+    lotteryPk.toBuffer(),
+    Buffer.from(new Uint8Array(new Uint32Array([id]).buffer)) // This ensures little-endian 4-byte format
+  ];
+  
+  const [pda] = await PublicKey.findProgramAddress(seeds, PROGRAM_ID);
+  
+  return {
+    address: pda,
+    seeds
+  };
+};
+
 // Calculate the total prize in SOL as a string
 export const getTotalPrize = (lottery: {
-  lastTicketId: BN;
-  ticketPrice: BN;
+  lastTicketId: any;
+  ticketPrice: any;
 }): string => {
-  return lottery.lastTicketId
-    .mul(lottery.ticketPrice)
+  const lastTicketIdBN = new BN(lottery.lastTicketId);
+  const ticketPriceBN = new BN(lottery.ticketPrice);
+  
+  return lastTicketIdBN
+    .mul(ticketPriceBN)
     .div(new BN(LAMPORTS_PER_SOL))
     .toString();
 };

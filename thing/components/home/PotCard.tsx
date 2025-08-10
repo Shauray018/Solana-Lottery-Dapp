@@ -7,60 +7,37 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { shortenPk } from "@/app/utils/helper";
 // Temp imports
 import { PublicKey } from '@solana/web3.js';
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useAppContext } from "@/context/context";
 
 const PotCard = () => {
 
   const { 
     connected, 
-    isMasterInitialized, 
-    initMaster
+    initMaster, 
+    createLottery, 
+    lotteryId, 
+    lotteryPot, 
+    buyTicket, 
+    isLotteryAuthority, 
+    canClaim, 
+    isFinished, 
+    lotteryHistory, 
+    pickWinner, 
+    claimPrize
   } = useAppContext(); 
   console.log(connected, "connection status")
 
+  const isMasterInitialized = true
 
-
-  // Static Data
-  const lotteryId = 3
-  const lotteryPot = 1000
-
-  const lotteryHistory = [
-    { lotteryId: 3, winnerId: 3, winnerAddress: new PublicKey("11111111111111111111111111111111"), prize: '15' }
-  ]
-
-  // Static States:
-
-  // Is Wallet connected?
-  // const [connected, setConnected] = useState(true)
-  // Did the connected wallet create the lottery?
-  const isLotteryAuthority = true
-  // Is the master created for smart contract?
-  // Is there already a winner for the lottery?
-  const [isFinished, setIsFinished] = useState(false)
-  // If there is a winner can that winner claim the prize?
-  const [canClaim, setCanClaim] = useState(false)
-
-
-  const createLottery = () => {
-    // updates the lottery id
-    console.log("Creating a new lottery")
+  useEffect( 
+  () => { 
+    console.log("this is the lottery History", lotteryHistory)
+    console.log("master initializign status: ", isMasterInitialized)
   }
+  , [lotteryHistory, isMasterInitialized])
 
-  const buyTicket = () => {
-    // buys a ticket for the current lottery displayed
-    console.log("Purchasing ticket for current lottery")
-  }
-
-  const pickWinner = () => {
-    setCanClaim(true)
-    console.log("Picking a winner and allowing that winner to claim the ticket")
-  }
-
-  const claimPrize = () => {
-    setCanClaim(false)
-    console.log("You're the winner! Claiming your prize now...")
-  }
+  const lastWinner = lotteryHistory?.[lotteryHistory.length - 1];
 
   if (!isMasterInitialized)
     return (
@@ -81,45 +58,54 @@ const PotCard = () => {
     );
 
   return (
-    <div className="flex flex-col justify-center items-center w-fit p-4 bg-gray-500">
-      <div >
-        Lottery <span>#{lotteryId}</span>
+    <div className="card card-border mt-10 w-96 shadow bg-base-200">
+      <div className="card-body">
+        <div className="card-title">
+          Lottery <span>#{lotteryId}</span>
+        </div>
+        <div>Pot 🍯: {lotteryPot} SOL</div>
+        <div className="flex flex-col justify-center items-center gap-1">
+            <div className="font-black text-2xl">🏆Recent Winner🏆</div>
+            <div className=" text-accent font-bold text-xl">
+                {!lotteryHistory ? (
+                  <span className="text-gray-400">Loading winners...</span>
+                ) : lotteryHistory.length === 0 ? (
+                  <span className="text-gray-400">No winners yet</span>
+                ) : lastWinner?.winnerAddress?.toBase58 ? (
+                  shortenPk(lastWinner.winnerAddress.toBase58())
+                ) : (
+                  <span className="text-gray-400">Winner data unavailable</span>
+                )}
+            </div>
+        </div>
+            {connected ? (
+              <>
+                {!isFinished && (
+                  <button className="btn btn-primary m-2 rounded" onClick={buyTicket}>
+                    Enter
+                  </button>
+                )}
+
+                {isLotteryAuthority && !isFinished && (
+                  <button className="btn btn-primary m-2 rounded" onClick={pickWinner}>
+                    Pick Winner
+                  </button>
+                )}
+
+                {canClaim && (
+                  <button className="btn btn-primary m-2 rounded" onClick={claimPrize}>
+                    Claim prize
+                  </button>
+                )}
+
+                <button className="btn btn-primary m-2 rounded" onClick={createLottery}>
+                  Create lottery
+                </button>
+              </>
+            ) : (
+              <WalletMultiButton />
+            )}
       </div>
-      <div >Pot 🍯: {lotteryPot} SOL</div>
-      <div>🏆Recent Winner🏆</div>
-      <div>
-        {lotteryHistory?.length &&
-          shortenPk(
-            lotteryHistory[lotteryHistory.length - 1].winnerAddress.toBase58()
-          )}
-      </div>
-      {connected ? (
-        <>
-          {!isFinished && (
-            <button className="btn btn-primary m-2" onClick={buyTicket}>
-              Enter
-            </button>
-          )}
-
-          {isLotteryAuthority && !isFinished && (
-            <button className="btn btn-primary m-2" onClick={pickWinner}>
-              Pick Winner
-            </button>
-          )}
-
-          {canClaim && (
-            <button className="btn btn-primary m-2" onClick={claimPrize}>
-              Claim prize
-            </button>
-          )}
-
-          <button className="btn btn-primary m-2" onClick={createLottery}>
-            Create lottery
-          </button>
-        </>
-      ) : (
-        <WalletMultiButton />
-      )}
     </div>
   );
 };
