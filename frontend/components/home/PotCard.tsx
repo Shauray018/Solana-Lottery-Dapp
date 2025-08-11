@@ -55,13 +55,13 @@ const PotCard = () => {
   return (
     <div className="card card-border mt-10 w-96 shadow bg-base-200">
       <div className="card-body">
-        <div className="card-title">
-          Lottery <span>#{lotteryId}</span>
+        <div className="card-title flex justify-center items-center font-black text-2xl">
+          Lottery <span className="font-black text-2xl">#{lotteryId}</span>
         </div>
-        <div>Pot 🍯: {lotteryPot} SOL</div>
+        <div className="flex justify-center items-center text-lg">Pot 🍯: {lotteryPot} SOL</div>
         <div className="flex flex-col justify-center items-center gap-1">
-            <div className="font-black text-2xl">🏆Recent Winner🏆</div>
-            <div className=" text-accent font-bold text-xl">
+            <div className="font-black text-xl">🏆Recent Winner🏆</div>
+            <div className=" text-accent font-bold text-lg">
                 {!lotteryHistory ? (
                   <span className="text-gray-400">Loading winners...</span>
                 ) : lotteryHistory.length === 0 ? (
@@ -98,7 +98,9 @@ const PotCard = () => {
                 </button>
               </>
             ) : (
-              <WalletMultiButton />
+              <div className="flex justify-center items-center">
+                  <WalletMultiButton />
+              </div>
             )}
       </div>
     </div>
