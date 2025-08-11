@@ -8,12 +8,14 @@ import {
   TICKET_SEED,
 } from "./constants";
 import { Idl } from "@project-serum/anchor";
+import { AnchorWallet } from "@solana/wallet-adapter-react";
+import { MockWallet } from "./helper";
 
 // Type for the program
 type MyProgram = Program<Idl>;
 
 // Fetch the Anchor Program
-export const getProgram = (connection: Connection, wallet: Wallet): MyProgram => {
+export const getProgram = (connection: Connection, wallet: AnchorWallet | MockWallet): MyProgram => {
   const provider = new AnchorProvider(connection, wallet, {
     commitment: "confirmed",
   });

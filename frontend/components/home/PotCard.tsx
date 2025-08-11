@@ -1,13 +1,8 @@
 "use client"
 
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-// import style from "../styles/PotCard.module.css";
-// import { useAppContext } from "../context/context";
-// import { shortenPk } from "../utils/helper";
 import { shortenPk } from "@/app/utils/helper";
-// Temp imports
-import { PublicKey } from '@solana/web3.js';
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useAppContext } from "@/context/context";
 
 const PotCard = () => {

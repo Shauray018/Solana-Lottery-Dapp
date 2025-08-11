@@ -3,13 +3,22 @@
 import { shortenPk } from "@/app/utils/helper";
 import { useAppContext } from "@/context/context";
 
+
+interface TableRow { 
+  lotteryId: String;
+  winnerAddress: String; 
+  winnerId: String; 
+  prize: String; 
+  index: number;
+}
+
 const TableRow = ({
   lotteryId,
   winnerAddress = "4koeNJ39zejjuCyVQdZmzsx28CfJoarrv4vmsuHjFSB6",
   winnerId,
   prize,
   index,
-}) => {
+} : TableRow) => {
   return (
     <tr>
       <th>{index + 1}</th>
@@ -37,7 +46,7 @@ const HistoryTable = () => {
           </tr>
         </thead>
         <tbody>
-          {lotteryHistory?.map((h, i) => (
+          {lotteryHistory?.map((h: any, i: any) => (
             <TableRow key={i} {...h} index={i} />
           ))}
         </tbody>
