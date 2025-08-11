@@ -1,0 +1,18 @@
+[package]
+name = "lottery"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "lottery"
+crate-type = ["cdylib", "lib"]
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+default = []
+
+[dependencies]
+anchor-lang = "0.30.1" # Check your Anchor CLI version & match
+solana-program = "1.18.17" # Match Solana toolchain version
